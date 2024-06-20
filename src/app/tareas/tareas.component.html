@@ -1,0 +1,46 @@
+<!-- src/app/tareas/tareas.component.html -->
+<div class="tareas-container">
+    <mat-card>
+        <div *ngIf="username$ | async as username">
+            <mat-card-title>Bienvenido, {{ username }}</mat-card-title>
+        </div>
+        <form (ngSubmit)="addTask()" #taskForm="ngForm">
+            <mat-form-field class="full-width">
+                <mat-label>Nueva Tarea</mat-label>
+                <input matInput type="text" required [(ngModel)]="newTask" name="task" pattern="^[a-zA-Z0-9 ]*$">
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit">Agregar</button>
+        </form>
+        <mat-list>
+            <mat-list-item *ngFor="let task of tasks">
+                <mat-checkbox [(ngModel)]="task.completed" (change)="toggleTask(task)"></mat-checkbox>
+                {{ task.name }}
+                <span *ngIf="task.time">({{ task.time }} s)</span>
+                <button *ngIf="!task.completed" mat-icon-button color="warn" (click)="removeTask(task)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <ng-container *ngIf="(role$ | async) as role">
+                    <button *ngIf="role == 'admin'" mat-icon-button color="primary" (click)="editTask(task)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </ng-container>
+                <button *ngIf="task.time" mat-icon-button color="primary" (click)="handleTaskStart(task)">
+                    <mat-icon *ngIf="task.requesting">hourglass_empty</mat-icon>
+                    <mat-icon *ngIf="!task.requesting">play_arrow</mat-icon>
+                </button>
+            </mat-list-item>
+        </mat-list>
+        <div *ngIf="selectedTask">
+            <mat-form-field class="full-width">
+                <mat-label>Editar Tarea</mat-label>
+                <input matInput [(ngModel)]="selectedTask.name" placeholder="Nombre de la Tarea">
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <mat-label>Tiempo de Tarea (segundos)</mat-label>
+                <input matInput type="number" [(ngModel)]="selectedTask.time" placeholder="Tiempo en segundos">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="saveTask()">Guardar</button>
+            <button mat-raised-button color="warn" (click)="cancelEdit()">Cancelar</button>
+        </div>
+    </mat-card>
+</div>

@@ -1,0 +1,16 @@
+.tareas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+mat-card {
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.full-width {
+    width: 100%;
+}
